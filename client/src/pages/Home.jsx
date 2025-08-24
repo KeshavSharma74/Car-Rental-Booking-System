@@ -4,6 +4,8 @@ import CarCard from '../components/CarCard'
 import FeaturedSection from '../components/FeaturedSection'
 // import { assets } from '../assets/assets'
 import Banner from '../components/Banner'
+import Testimonial from '../components/Testimonial'
+import Newsletter from '../components/Newsletter'
 
 const Home = () => {
 
@@ -26,10 +28,12 @@ const Home = () => {
   //     }
 
   return (
-    <div>
+    <div >
       <Hero></Hero>
         <FeaturedSection></FeaturedSection>
         <Banner></Banner>
+        <Testimonial></Testimonial>
+        <Newsletter></Newsletter>
     </div>
   )
 }

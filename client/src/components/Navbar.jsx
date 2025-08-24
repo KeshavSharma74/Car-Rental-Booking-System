@@ -13,11 +13,11 @@ const Navbar = ({ setShowLogin }) => {
       }`}
     >
       <div
-        className={`flex items-center w-[1300px] justify-between px-24 py-3 text-gray-600 transition-all`}
+        className={`flex items-center w-[1355px] justify-between px-24 py-3 text-gray-600 transition-all`}
       >
         {/* Logo */}
         <Link to='/'>
-          <img src={assets.logo} alt='logo' className='h-8 mr-[12rem]' />
+          <img src={assets.logo} alt='logo' className='h-8 mr-[18rem]' />
         </Link>
 
         {/* Menu Links */}
