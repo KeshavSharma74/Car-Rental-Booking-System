@@ -10,7 +10,7 @@ const Hero = () => {
   const cityList = ["Houston", "New York", "Chicago", "Los Angeles"];
 
   return (
-    <div className='h-screen flex flex-col items-center justify-center gap-14 bg-[#F1F5F9] text-center'>
+    <div className='h-screen flex flex-col items-center justify-center gap-17 bg-[#F1F5F9] text-center'>
       <h1 className='text-4xl md:text-5xl font-bold'>Luxury cars on Rent</h1>
 
       <form className=' flex flex-col md:flex-row items-center justify-between gap-6 p-6 px-12 rounded-lg md:rounded-full w-[49rem] max-w-4xl bg-white shadow-[0px_8px_20px_rgba(0,0,0,0.1)]'>
@@ -22,7 +22,7 @@ const Hero = () => {
             onChange={(e) => setPickupLocation(e.target.value)}
             className='w-[10rem] rounded-md outline-none'
           >
-            <option value="">Pickup Location</option>
+            <option value="" >Pickup Location</option>
             {cityList.map((city) => (
               <option key={city} value={city}>
                 {city}
