@@ -7,12 +7,13 @@ const Navbar = ({ setShowLogin }) => {
 
   return (
     <div
-      className={`flex justify-center  text-[0.95rem] border-b border-b-gray-300 ${
-        location.pathname === '/' && 'bg-gray-200'
+      className={`flex justify-center  text-[0.95rem] border-b border-b-gray-300
+         ${
+        location.pathname === '/' && 'bg-[#F1F5F9]'
       }`}
     >
       <div
-        className={`flex items-center w-[1300px] justify-between px-24 py-2 text-gray-600 transition-all`}
+        className={`flex items-center w-[1300px] justify-between px-24 py-3 text-gray-600 transition-all`}
       >
         {/* Logo */}
         <Link to='/'>
@@ -22,7 +23,7 @@ const Navbar = ({ setShowLogin }) => {
         {/* Menu Links */}
             <div
             className={`flex flex-row items-center gap-8 p-2 text-gray-700 text-[0.95rem] z-50 ${
-                location.pathname === '/' && 'bg-gray-200'
+                location.pathname === '/' && 'bg-[#F1F5F9]'
             }`}
             >
           {menuLinks.map((link, index) => (
@@ -33,11 +34,11 @@ const Navbar = ({ setShowLogin }) => {
         </div>
 
         {/* Search Bar */}
-        <div className='flex items-center text-sm gap-2 border border-borderColor px-3 rounded-full w-56'>
+        <div className='flex items-center text-sm gap-2 border border-gray-400 px-3 rounded-full w-56'>
           <input
             type='text'
-            className='py-1.5 w-full bg-transparent outline-none border-gray-300 placeholder-gray-500'
-            placeholder='Search products'
+            className='py-1.5 w-full bg-transparent outline-none placeholder-gray-500 text-sm placeholder:text-sm'
+            placeholder='Search cars'
           />
           <img src={assets.search_icon} alt='search' />
         </div>
@@ -52,7 +53,7 @@ const Navbar = ({ setShowLogin }) => {
           </button>
           <button
             onClick={() => setShowLogin(true)}
-            className='cursor-pointer px-8 py-2 border-none bg-blue-600 text-white text-[0.91rem] transition-all rounded-lg'
+            className='cursor-pointer px-8 py-2 border-none bg-[#2a6bf8] text-white text-[0.91rem] transition-all rounded-lg'
           >
             Login
           </button>
