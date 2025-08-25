@@ -1,9 +1,93 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { dummyDashboardData, assets } from '../../assets/assets';
+import Title from '../../components/owner/Title';
 
 const Dashboard = () => {
-  return (
-    <div>Dashboard</div>
-  )
-}
+    // State to hold all dashboard data
+    const [data, setData] = useState({
+        totalCars: 0,
+        totalBookings: 0,
+        pendingBookings: 0,
+        completedBookings: 0,
+        recentBookings: [],
+        monthlyRevenue: 0,
+    });
+    
+    const currency=import.meta.env.VITE_CURRENCY
 
-export default Dashboard
+    // Fetch and set data on component mount
+    useEffect(() => {
+        setData(dummyDashboardData);
+    }, []);
+
+    // Array for the top summary cards, derived from state
+    const dashboardCards = [
+        { title: "Total Cars", value: data.totalCars, icon: assets.carIconColored },
+        { title: "Total Bookings", value: data.totalBookings, icon: assets.listIconColored },
+        { title: "Pending", value: data.pendingBookings, icon: assets.cautionIconColored },
+        { title: "Confirmed", value: data.completedBookings, icon: assets.check_icon },
+    ];
+
+    return (
+        <div className='px-2 pt-5 md:px-10 flex-1 text-[0.9rem]'>
+            <Title 
+                title='Admin Dashboard' 
+                subTitle='Monitor overall platform performance including total cars, bookings, revenue, and recent activities' 
+            />
+
+            {/* Summary Cards Section */}
+            <div className='grid sm:grid-cols-2 lg:grid-cols-4 gap-6 my-8'>
+                {dashboardCards.map((card, index) => (
+                    <div key={index} className='flex gap-2 items-center justify-between p-4 rounded-md border border-gray-300'>
+                        <div>
+                            <h1 className='text-sm text-gray-500'>{card.title}</h1>
+                            <p className='text-lg font-semibold'>{card.value}</p>
+                        </div>
+                        <div className='flex items-center justify-center w-10 h-10 rounded-full bg-primary/10'>
+                            <img src={card.icon} alt={card.title} className='w-4 h-4' />
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Recent Bookings & Revenue Section */}
+            <div className='flex flex-wrap items-start gap-6 mb-8 w-full'>
+                
+                {/* Recent Bookings Card */}
+                <div className='p-4 md:p-6 border border-gray-300 rounded-md flex-1 min-w-[300px]'>
+                    <h1 className='text-lg font-medium'>Recent Bookings</h1>
+                    <p className='text-gray-500 text-sm'>Latest customer bookings</p>
+                    <div className='flex flex-col gap-4 mt-4'>
+                        {data.recentBookings.map((booking, index) => (
+                            <div key={index} className='flex items-center justify-between'>
+                                <div className='flex items-center gap-2'>
+                                    <div className='hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-primary/10'>
+                                        <img src={assets.listIconColored} alt="booking" className='h-5 w-5' />
+                                    </div>
+                                    <div>
+                                        <p>{booking.car.brand} {booking.car.model}</p>
+                                        <p className='text-sm text-gray-500'>{booking.createdAt.split('T')[0]}</p>
+                                    </div>
+                                </div>
+                                <div className='flex items-center gap-2 font-medium'>
+                                    <p className='text-gray-500'>{currency}{booking.price.toLocaleString()}</p>
+                                    <p className={`px-3 py-0.5 border border-gray-300 rounded-full text-sm ${booking.status === 'confirmed' ? 'text-green-600' : 'text-orange-600'}`}>{booking.status}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Updated Monthly Revenue Card */}
+                <div className='p-4 md:p-6 border border-gray-300 rounded-md w-full md:max-w-xs'>
+                     <h1 className='text-lg font-medium'>Monthly Revenue</h1>
+                     <p className='text-gray-500'>Revenue for current month</p>
+                     <p className='text-3xl mt-6 font-semibold text-blue-500'>{currency}{data.monthlyRevenue.toLocaleString()}</p>
+                </div>
+
+            </div>
+        </div>
+    );
+};
+
+export default Dashboard;
