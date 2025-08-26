@@ -129,5 +129,21 @@ const login = async(req,res)=>{
     }
 }
 
+const getUserData = async(req,res)=>{
+    try {
+        return res.status(200).json({
+            success: true,
+            message: "User data fetched successfully",
+            user: req.user
+        });
 
-export {register,login}
+    } catch (error) {
+        console.log("Error in getUserData controller:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
+
+export {register,login,getUserData}
