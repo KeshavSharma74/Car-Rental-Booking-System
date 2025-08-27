@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { dummyDashboardData, assets } from '../../assets/assets';
+import {assets } from '../../assets/assets';
 import Title from '../../components/owner/Title';
+import { useAppContext } from '../../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
     // State to hold all dashboard data
+
+    const {axios,isOwner,currency}=useAppContext();
+
     const [data, setData] = useState({
         totalCars: 0,
         totalBookings: 0,
@@ -13,12 +18,27 @@ const Dashboard = () => {
         monthlyRevenue: 0,
     });
     
-    const currency=import.meta.env.VITE_CURRENCY
+    const fetchDashboardData = async () => {
+    try {
+        const { data } = await axios.get('/api/owner/dashboard');
+        if (data.success) {
+            setData(data.dashboardData);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
 
     // Fetch and set data on component mount
     useEffect(() => {
-        setData(dummyDashboardData);
-    }, []);
+
+        if(isOwner){
+            fetchDashboardData();
+        }
+
+    }, [isOwner]);
 
     // Array for the top summary cards, derived from state
     const dashboardCards = [

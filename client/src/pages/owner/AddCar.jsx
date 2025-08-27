@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Title from '../../components/owner/Title';
 import { assets } from '../../assets/assets';
+import { useAppContext } from '../../context/AppContext';
+import toast from 'react-hot-toast';
 
 const AddCar = () => {
-    // State for the car image file
     const [image, setImage] = useState(null);
-    // State for the currency symbol
-    const currency=import.meta.env.VITE_CURRENCY
-    // State object for all car details
+    const { currency, axios } = useAppContext();
+
     const [car, setCar] = useState({
         brand: '',
         model: '',
@@ -21,23 +21,72 @@ const AddCar = () => {
         description: '',
     });
 
-    // Handler for form submission
-    const onSubmitHandler = async (e) => {
-        e.preventDefault();
-        // In a real application, you would use FormData to send both
-        // the image file and the car data to your server.
-        console.log("Submitting Car Data:", car);
-        console.log("Submitting Image:", image.name);
-        // Here you would typically make an API call.
+    const [loading, setLoading] = useState(false);
+
+    // Convert file to base64
+    const getBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
     };
 
-    // Generic handler to update the car state object
+    // Submit handler
+    const onSubmitHandler = async (e) => {
+        e.preventDefault();
+
+        if (!image) {
+            toast.error("Please upload a car image");
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            // convert image → base64
+            const base64Image = await getBase64(image);
+
+            // send data + image to backend
+            const res = await axios.post(
+                `/api/owner/add-car`,
+                { ...car, image: base64Image },
+                { withCredentials: true }
+            );
+
+            if (res.data.success) {
+                toast.success("Car listed successfully");
+                setCar({
+                    brand: '',
+                    model: '',
+                    year: '',
+                    pricePerDay: '',
+                    category: '',
+                    transmission: '',
+                    fuel_type: '',
+                    seating_capacity: '',
+                    location: '',
+                    description: '',
+                });
+                setImage(null);
+            } else {
+                toast.error(res.data.message || "Failed to list car");
+            }
+
+        } catch (error) {
+            console.error("Error while adding car:", error);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
         setCar(prevCar => ({ ...prevCar, [name]: value }));
     };
 
-    // Reusable styles for inputs and labels
     const inputStyle = "px-3 py-2 mt-1 border border-borderColor rounded-md outline-none w-full";
     const labelStyle = "flex flex-col w-full";
 
@@ -70,27 +119,26 @@ const AddCar = () => {
                     </label>
                 </div>
                 
-                {/* Car Brand & Model */}
+                {/* Form Inputs */}
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                     <label className={labelStyle}>Brand
-                        <input type="text" name="brand" placeholder='e.g. BMW, Mercedes, Audi...' required className={inputStyle} value={car.brand} onChange={onChangeHandler} />
+                        <input type="text" name="brand" required className={inputStyle} value={car.brand} onChange={onChangeHandler} />
                     </label>
                     <label className={labelStyle}>Model
-                        <input type="text" name="model" placeholder='e.g. X5, E-Class, M4...' required className={inputStyle} value={car.model} onChange={onChangeHandler} />
+                        <input type="text" name="model" required className={inputStyle} value={car.model} onChange={onChangeHandler} />
                     </label>
                 </div>
 
-                {/* Year, Price, Category */}
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
                     <label className={labelStyle}>Year
-                        <input type="number" name="year" placeholder='2025' required className={inputStyle} value={car.year} onChange={onChangeHandler} />
+                        <input type="number" name="year" required className={inputStyle} value={car.year} onChange={onChangeHandler} />
                     </label>
                     <label className={labelStyle}>Daily Price ({currency})
-                        <input type="number" name="pricePerDay" placeholder='100' required className={inputStyle} value={car.pricePerDay} onChange={onChangeHandler} />
+                        <input type="number" name="pricePerDay" required className={inputStyle} value={car.pricePerDay} onChange={onChangeHandler} />
                     </label>
                     <label className={labelStyle}>Category
                         <select name="category" required className={inputStyle} value={car.category} onChange={onChangeHandler}>
-                            <option value="">Select a category</option>
+                            <option value="">Select</option>
                             <option value="Sedan">Sedan</option>
                             <option value="SUV">SUV</option>
                             <option value="Van">Van</option>
@@ -99,11 +147,10 @@ const AddCar = () => {
                     </label>
                 </div>
 
-                {/* Transmission, Fuel Type, Seating Capacity */}
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
                     <label className={labelStyle}>Transmission
                         <select name="transmission" required className={inputStyle} value={car.transmission} onChange={onChangeHandler}>
-                            <option value="">Select a transmission</option>
+                            <option value="">Select</option>
                             <option value="Automatic">Automatic</option>
                             <option value="Manual">Manual</option>
                             <option value="Semi-Automatic">Semi-Automatic</option>
@@ -111,7 +158,7 @@ const AddCar = () => {
                     </label>
                     <label className={labelStyle}>Fuel Type
                         <select name="fuel_type" required className={inputStyle} value={car.fuel_type} onChange={onChangeHandler}>
-                            <option value="">Select a fuel type</option>
+                            <option value="">Select</option>
                             <option value="Diesel">Diesel</option>
                             <option value="Petrol">Petrol</option>
                             <option value="Electric">Electric</option>
@@ -119,15 +166,14 @@ const AddCar = () => {
                         </select>
                     </label>
                     <label className={labelStyle}>Seating Capacity
-                        <input type="number" name="seating_capacity" placeholder='4' required className={inputStyle} value={car.seating_capacity} onChange={onChangeHandler} />
+                        <input type="number" name="seating_capacity" required className={inputStyle} value={car.seating_capacity} onChange={onChangeHandler} />
                     </label>
                 </div>
-                
-                {/* Car Location */}
+
                 <div className='flex flex-col w-full'>
                     <label>Location</label>
                     <select name="location" onChange={onChangeHandler} value={car.location} required className={inputStyle}>
-                        <option value="">Select a location</option>
+                        <option value="">Select</option>
                         <option value="Kolkata">Kolkata</option>
                         <option value="New Delhi">New Delhi</option>
                         <option value="Mumbai">Mumbai</option>
@@ -135,16 +181,19 @@ const AddCar = () => {
                     </select>
                 </div>
 
-                {/* Car Description */}
                 <div className='flex flex-col w-full'>
                     <label>Description</label>
-                    <textarea name="description" rows={5} placeholder='e.g. A luxurious SUV with a spacious interior and a powerful engine.' required className={inputStyle} value={car.description} onChange={onChangeHandler}></textarea>
+                    <textarea name="description" rows={5} required className={inputStyle} value={car.description} onChange={onChangeHandler}></textarea>
                 </div>
                 
-                {/* Submit Button */}
-                <button type="submit" className='flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-md font-medium w-max cursor-pointer -mb-1'>
-                    <img src={assets.tick_icon} alt="list car" />
-                    List Your Car
+                {/* Submit */}
+                <button 
+                    type="submit" 
+                    disabled={loading} 
+                    className='flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-md font-medium w-max cursor-pointer -mb-1'
+                >
+                    
+                    {loading ? "Listing..." : "List Your Car"}
                 </button>
             </form>
         </div>

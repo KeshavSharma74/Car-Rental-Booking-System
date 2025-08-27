@@ -84,7 +84,6 @@ const Navbar = () => {
             onClick={() =>  { user?logout() : setShowLogin(true)}}
             className='cursor-pointer px-8 py-2 border-none bg-[#2a6bf8] text-white text-[0.91rem] transition-all rounded-lg'
           >
-            {console.log('user : ',user)}
             {user?'Logout':'Login'}
           </button>
         </div>
