@@ -6,14 +6,18 @@ const protect = async(req,res,next) =>{
 
     const token=req.cookies.jwt;
 
+    // console.log("mei protext mei agya");
+
     try{
         
+        // console.log("token : ",token);
         if(!token){
-            return res.status(400).json({
+            return res.json({
                 success:false,
-                message:"Unauthorized - No token provided"
+                message:"Please login first to continue"
             })
         }
+        // console.log("token check ke baad")
 
         const decodedToken = jwt.verify(token,process.env.JWT_SECRET);
 

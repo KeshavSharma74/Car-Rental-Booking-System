@@ -2,6 +2,7 @@ import User from "../models/User.model.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import "dotenv/config"
+import Car from "../models/car.model.js";
 
 const generateToken = (userId,res) =>{
     
@@ -80,6 +81,16 @@ const register = async(req,res)=>{
     }
 }
 
+export const getCars = async (req, res) => {
+    try {
+        const cars = await Car.find({ isAvailable: true });
+        res.status(200).json({ success: true, cars });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 const login = async(req,res)=>{
 
     const {email,password} = req.body;
@@ -115,7 +126,8 @@ const login = async(req,res)=>{
 
         return res.status(200).json({
             success:true,
-            message:"User LoggedIn successfully"
+            message:"User LoggedIn successfully",
+            user
         })
 
     }
@@ -146,4 +158,29 @@ const getUserData = async(req,res)=>{
     }
 }
 
-export {register,login,getUserData}
+const logout = async (req, res) => {
+  try {
+    // Clear the JWT cookie
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      secure: true,         // set true if using HTTPS
+      sameSite: "none",     // must match your login cookie
+      path: "/",            // ensure cookie path matches login
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "User logged out successfully.",
+    });
+
+  } catch (error) {
+    console.log("Error in logout controller:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
+
+
+export {register,login,getUserData,logout}

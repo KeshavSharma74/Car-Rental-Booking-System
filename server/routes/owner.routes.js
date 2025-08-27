@@ -9,6 +9,6 @@ ownerRouter.get('/cars',protect,getOwnerCars);
 ownerRouter.post('/toggle-car',protect,toggleCarAvailability);
 ownerRouter.delete('/delete-car',protect,deleteCar);
 ownerRouter.get('/dashboard',protect,getDashboardData);
-ownerRouter.post('/update-image',protect,updateUserImage)
+ownerRouter.post('/update-image',protect,updateUserImage);
 
 export default ownerRouter;
