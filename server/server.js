@@ -9,11 +9,13 @@ import bookingRouter from "./routes/booking.routes.js";
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" })); // for JSON payloads
+app.use(express.urlencoded({ limit: "10mb", extended: true })); // for form data
+
 
 // ✅ Configure CORS to allow credentials (cookies)
 app.use(cors({
-    origin: process.env.CLIENT_URL, 
+    origin: "http://localhost:5173", 
     credentials: true
 }));
 

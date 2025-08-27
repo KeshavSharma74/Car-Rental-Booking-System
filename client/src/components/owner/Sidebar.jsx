@@ -1,21 +1,44 @@
 import React, { useState } from 'react';
-import { assets, dummyUserData ,ownerMenuLinks} from '../../assets/assets';
+import { assets, ownerMenuLinks} from '../../assets/assets';
 import { useLocation, NavLink } from 'react-router-dom';
+import { useAppContext } from '../../context/AppContext';
+import { toast } from 'react-hot-toast';
 
 const Sidebar = () => {
-  // Get user data and current location from router
-  const user = dummyUserData;
+  const { user, fetchUser,axios } = useAppContext(); // ✅ include fetchUser for refreshing user data
   const location = useLocation();
 
-  // State to manage the selected image file for upload
   const [image, setImage] = useState('');
 
-  // Function to simulate updating the user's image
+  // Function to upload image to backend API
   const updateImage = async () => {
-    if (image) {
-      console.log("Updating image with:", image.name);
-      user.image = URL.createObjectURL(image); 
-      setImage(''); 
+    try {
+      if (!image) return;
+
+      const reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onloadend = async () => {
+        try {
+          const base64Image = reader.result;
+
+          // send { image } to backend
+          const { data } = await axios.post("/api/owner/update-image", { image: base64Image });
+
+          if (data.success) {
+            fetchUser(); // refresh user info
+            toast.success(data.message);
+            setImage('');
+          } else {
+            toast.error(data.message || "Image update failed");
+          }
+        } catch (err) {
+          console.error("Error updating image:", err);
+          toast.error("Something went wrong while updating image");
+        }
+      };
+    } catch (error) {
+      console.error("Error preparing image:", error);
+      toast.error("Could not process the image");
     }
   };
 
