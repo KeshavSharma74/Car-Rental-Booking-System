@@ -12,6 +12,7 @@ const bookingSchema = new mongoose.Schema({
     price: { type: Number, required: true },
 }, { timestamps: true });
 
-const Booking = mongoose.model('Booking', bookingSchema);
+// ✅ Prevent OverwriteModelError
+const Booking = mongoose.models.Booking || mongoose.model("Booking", bookingSchema);
 
 export default Booking;
