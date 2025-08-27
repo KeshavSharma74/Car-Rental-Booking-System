@@ -1,9 +1,37 @@
 import { assets, menuLinks } from '../assets/assets';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
-const Navbar = ({ setShowLogin }) => {
+const Navbar = () => {
+
+
+  const {setShowLogin,user,logout,isOwner,axios,setIsOwner}=useAppContext();
+
   const location = useLocation();
   const navigate = useNavigate();
+
+  const changeRole = async() =>{
+    try{
+      // console.log("call hogya mei");
+
+      const {data} = await axios.post('/api/owner/change-role');
+
+      if(data.success){
+        setIsOwner(true);
+        toast.success("Now you can list cars");
+      }
+      else{
+        toast.error(data.message);
+      }
+    }
+    catch(error){
+      // console.log("ab agya sidha error");
+      // console.log(error);
+      // console.log(error.message);
+      toast.error(error.message)
+    }
+  }
 
   return (
     <div
@@ -46,16 +74,18 @@ const Navbar = ({ setShowLogin }) => {
         {/* Buttons */}
         <div className='flex items-center gap-6'>
           <button
-            onClick={() => navigate('/owner')}
+            onClick={() => isOwner? navigate('/owner') : changeRole()}
             className='cursor-pointer'
-          >
-            Dashboard
+          > 
+            {isOwner?'Dashboard':'List cars'}
           </button>
+
           <button
-            onClick={() => setShowLogin(true)}
+            onClick={() =>  { user?logout() : setShowLogin(true)}}
             className='cursor-pointer px-8 py-2 border-none bg-[#2a6bf8] text-white text-[0.91rem] transition-all rounded-lg'
           >
-            Login
+            {console.log('user : ',user)}
+            {user?'Logout':'Login'}
           </button>
         </div>
       </div>

@@ -1,31 +1,58 @@
 import React, { useState } from 'react';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
-const AuthModal = ({ setShowLogin }) => {
+const AuthModal = () => {
   // track whether the modal is for login or signup
   const [mode, setMode] = useState("login");
+  const {setShowLogin,axios,setUser}=useAppContext();
+
+  const navigate = useNavigate();
 
   // form states
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const actualMode = mode==="signup"?"register":"login";
+      // API call (mode = "login" or "signup")
+      const { data } = await axios.post(
+        `/api/user/${actualMode}`,
+        { name, email, password },
+        { withCredentials: true } // ensures cookies like jwt are sent/received
+      );
 
-    if (mode === "login") {
-      console.log("Logging in with:", { email, password });
-    } else {
-      console.log("Signing up with:", { name, email, password });
+      if (data.success) {
+        // store token
+        // redirect and close modal
+        navigate("/");
+        setShowLogin(false);
+        setUser(data.user);
+
+        toast.success(
+          mode === "login"
+            ? "Login successful 🎉"
+            : "Account created successfully 🎉"
+        );
+      } else {
+        toast.error(data.message || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Auth error:", error);
+      toast.error(
+        error.response?.data?.message || "Server error. Please try again."
+      );
+    } finally {
+      // reset fields
+      setName("");
+      setEmail("");
+      setPassword("");
+      setMode("login");
     }
-
-    // After successful auth you can close modal
-    setShowLogin(false);
-
-    // reset fields
-    setName("");
-    setEmail("");
-    setPassword("");
-    setMode("login");
   };
 
   return (
