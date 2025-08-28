@@ -178,6 +178,7 @@ const AddCar = () => {
                         <option value="New Delhi">New Delhi</option>
                         <option value="Mumbai">Mumbai</option>
                         <option value="Bangalore">Bangalore</option>
+                        <option value="Chandigarh">Chandigarh</option>
                     </select>
                 </div>
 

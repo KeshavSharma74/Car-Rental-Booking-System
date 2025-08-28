@@ -2,6 +2,8 @@ import { assets, menuLinks } from '../assets/assets';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import toast from 'react-hot-toast';
+// import { motion } from 'motion/react';
+import { motion } from 'motion/react';
 
 const Navbar = () => {
 
@@ -34,12 +36,21 @@ const Navbar = () => {
       // console.log("ab agya sidha error");
       // console.log(error);
       // console.log(error.message);
+
+      // if(false) console.log(motion);
+      
       toast.error(error.message)
     }
   }
 
+  const noop = () => motion;
+  noop();
+
   return (
-    <div
+    <motion.div
+    initial={{y:-20,opacity:0}}
+    animate={{y:0,opacity:1}}
+    transition={{duration:0.5}}
       className={`flex justify-center  text-[0.95rem] border-b border-b-gray-300
          ${
         location.pathname === '/' && 'bg-[#F1F5F9]'
@@ -50,7 +61,7 @@ const Navbar = () => {
       >
         {/* Logo */}
         <Link to='/'>
-          <img src={assets.logo} alt='logo' className='h-8 mr-[18rem]' />
+          <motion.img whileHover={{scale:1.05}} src={assets.logo} alt='logo' className='h-8 mr-[18rem]' />
         </Link>
 
         {/* Menu Links */}
@@ -93,7 +104,7 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

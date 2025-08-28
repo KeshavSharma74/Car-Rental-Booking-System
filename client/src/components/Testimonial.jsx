@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion } from 'motion/react';
 
 const Testimonial = () => {
 
@@ -14,6 +15,9 @@ const Testimonial = () => {
         </svg>
     );
 
+      const noop = () => motion;
+  noop();
+
   return (
             <div className=" flex flex-col items-center px-6 md:px-16 lg:px-24 pt-20 pb-30">
             <div className="flex flex-col justify-center items-center text-center">
@@ -22,8 +26,13 @@ const Testimonial = () => {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-6 mt-20 mb-10">
-                {testimonials.map((testimonial) => (
-                    <div key={testimonial.id} className="bg-white p-6 rounded-xl shadow max-w-xs">
+                {testimonials.map((testimonial,index) => (
+                    <motion.div 
+                        initial={{y:40,opacity:0}}
+                        whileInView={{opacity:1,y:0}}
+                        transition={{duration:0.6,delay:index*0.2,ease:"easeOut"}}
+                        viewport={{once:true,amount:0.3}}
+                    key={testimonial.id} className="bg-white p-6 rounded-xl shadow max-w-xs">
                         <div className="flex items-center gap-3">
                             <img className="w-12 h-12 rounded-full" src={testimonial.image} alt={testimonial.name} />
                             <div>
@@ -37,7 +46,7 @@ const Testimonial = () => {
                             ))}
                         </div>
                         <p className="text-gray-500 max-w-90 mt-4">"{testimonial.review}"</p>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
         </div>
