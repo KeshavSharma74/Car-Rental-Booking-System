@@ -17,6 +17,7 @@ export const AppProvider = ({ children }) => {
   const [showLogin, setShowLogin] = useState(false);
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
+  const [pickupLocation,setPickupLocation]=useState("");
   const [cars, setCars] = useState([]);
 
   // Fetch user data
@@ -90,6 +91,8 @@ export const AppProvider = ({ children }) => {
     setReturnDate,
     logout,
     axios,
+    pickupLocation,
+    setPickupLocation
   };
 
   return (
