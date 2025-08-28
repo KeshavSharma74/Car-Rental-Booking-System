@@ -1,7 +1,7 @@
 import User from "../models/User.model.js";
 import Car from "../models/car.model.js";
 import cloudinary from "../config/cloudinary.js";
-import Booking from "../models/booking.model.js";
+import Booking from "../models/Booking.model.js";
 
 const changeRoleToOwner = async(req, res) => {
     const user = req.user;

@@ -1,4 +1,4 @@
-import Booking from "../models/booking.model.js";
+import Booking from "../models/Booking.model.js";
 import Car from "../models/car.model.js";
 
 const checkAvailability = async (carId, pickupDate, returnDate) => {
