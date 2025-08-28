@@ -15,7 +15,7 @@ app.use(express.urlencoded({ limit: "10mb", extended: true })); // for form data
 
 // ✅ Configure CORS to allow credentials (cookies)
 app.use(cors({
-    origin: "http://localhost:5173", 
+    origin: process.envCLIENT_URL, 
     credentials: true
 }));
 
