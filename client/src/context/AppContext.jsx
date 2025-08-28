@@ -49,6 +49,7 @@ export const AppProvider = ({ children }) => {
   const handleAuthFail = () => {
     setUser(null);
     setIsOwner(false);
+
     navigate("/");
   };
 

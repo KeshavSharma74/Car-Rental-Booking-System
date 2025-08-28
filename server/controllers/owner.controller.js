@@ -90,6 +90,7 @@ const getOwnerCars = async(req, res) => {
 const toggleCarAvailability = async(req, res) => {
     const ownerId = req.user._id;
     const { carId } = req.body;
+    
     try {
         if (!carId) {
             return res.status(400).json({ success: false, message: "Car ID must be provided." });
@@ -105,7 +106,7 @@ const toggleCarAvailability = async(req, res) => {
         const updatedCar = await car.save();
         return res.status(200).json({
             success: true,
-            message: `Car availability successfully set to ${updatedCar.isAvailable}.`,
+            message: updatedCar.isAvailable ? "Car listed as Available." : "Car marked as Unavailable.",
             car: updatedCar
         });
     } catch (error) {
@@ -121,6 +122,7 @@ const toggleCarAvailability = async(req, res) => {
 const deleteCar = async (req, res) => {
     const ownerId = req.user._id;
     const { carId } = req.body;
+    // console.log("carId : ",carId);
 
     try {
         // 1. Check if carId is provided

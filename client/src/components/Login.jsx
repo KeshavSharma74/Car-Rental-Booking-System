@@ -35,8 +35,8 @@ const AuthModal = () => {
 
         toast.success(
           mode === "login"
-            ? "Login successful 🎉"
-            : "Account created successfully 🎉"
+            ? "Login successful"
+            : "Account created successfully"
         );
       } else {
         toast.error(data.message || "Something went wrong");

@@ -11,6 +11,11 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // console.log("user :",user);
+  // console.log("isOwner :",isOwner);
+
+  setIsOwner(user?.role==="owner");
+
   const changeRole = async() =>{
     try{
       // console.log("call hogya mei");
@@ -74,10 +79,10 @@ const Navbar = () => {
         {/* Buttons */}
         <div className='flex items-center gap-6'>
           <button
-            onClick={() => isOwner? navigate('/owner') : changeRole()}
-            className='cursor-pointer'
-          > 
-            {isOwner?'Dashboard':'List cars'}
+            onClick={() => isOwner ? navigate('/owner') : changeRole()}
+            className="cursor-pointer"
+          >
+            {isOwner ? 'Dashboard' : 'List cars'}
           </button>
 
           <button
