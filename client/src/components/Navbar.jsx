@@ -13,10 +13,10 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // console.log("user :",user);
-  // console.log("isOwner :",isOwner);
+  console.log("user :",user);
+  console.log("isOwner :",isOwner);
 
-  setIsOwner(user?.role==="owner");
+  if(!isOwner) setIsOwner(user?.role==="owner");
 
   const changeRole = async() =>{
     try{

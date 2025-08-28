@@ -32,6 +32,7 @@ const AuthModal = () => {
         navigate("/");
         setShowLogin(false);
         setUser(data.user);
+        console.log("login function se user lelo : ",data.user);
 
         toast.success(
           mode === "login"

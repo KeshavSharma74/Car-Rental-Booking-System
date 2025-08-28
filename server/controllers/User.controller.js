@@ -63,14 +63,16 @@ const register = async (req, res) => {
 
         return res.json({
             success: true,
-            message: "User registered successfully"
+            message: "User registered successfully",
+            user
         });
 
     } catch (error) {
         console.log("Error while registering the User", error);
         return res.json({
             success: false,
-            message: error.message
+            message: error.message,
+            
         });
     }
 };
