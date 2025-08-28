@@ -11,25 +11,18 @@ const checkAvailability = async (carId, pickupDate, returnDate) => {
 };
 
 export const createBooking = async (req, res) => {
-
-    // console.log("create booking mei agya");
-
     try {
         const { _id } = req.user;
         const { car, pickupDate, returnDate } = req.body;
-
-        // console.log("car",car);
-        // console.log("pickupdate",[pickupDate]);
-        // console.log("returnDate",returnDate);
 
         const isAvailable = await checkAvailability(car, pickupDate, returnDate);
         if (!isAvailable) {
             return res.json({ success: false, message: "Car unavailable for selected dates" });
         }
-        // console.log("aviabale to hai");
+
         const carData = await Car.findById(car);
         if (!carData) {
-            return res.status(404).json({ success: false, message: "Car not found" });
+            return res.json({ success: false, message: "Car not found" });
         }
 
         const picked = new Date(pickupDate);
@@ -46,11 +39,11 @@ export const createBooking = async (req, res) => {
             price
         });
 
-        res.status(201).json({ success: true, message: "Booking Created" });
+        res.json({ success: true, message: "Booking Created" });
 
     } catch (error) {
         console.log("Error creating booking:", error.message);
-        res.status(500).json({ success: false, message: "An internal server error occurred.", error: error.message });
+        res.json({ success: false, message: "An internal server error occurred.", error: error.message });
     }
 };
 
@@ -93,15 +86,14 @@ export const getUserBookings = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ success: false, message: "Failed to retrieve user bookings", error: error.message });
+        res.json({ success: false, message: "Failed to retrieve user bookings", error: error.message });
     }
 };
-
 
 export const getOwnerBookings = async (req, res) => {
     try {
         if (req.user.role !== 'owner') {
-            return res.status(403).json({ success: false, message: "Unauthorized" });
+            return res.json({ success: false, message: "Unauthorized" });
         }
 
         const bookings = await Booking.find({ owner: req.user._id })
@@ -113,7 +105,7 @@ export const getOwnerBookings = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ success: false, message: "Failed to retrieve owner bookings", error: error.message });
+        res.json({ success: false, message: "Failed to retrieve owner bookings", error: error.message });
     }
 };
 
@@ -125,11 +117,11 @@ export const changeBookingStatus = async (req, res) => {
         const booking = await Booking.findById(bookingId);
 
         if (!booking) {
-            return res.status(404).json({ success: false, message: "Booking not found" });
+            return res.json({ success: false, message: "Booking not found" });
         }
 
         if (booking.owner.toString() !== _id.toString()) {
-            return res.status(403).json({ success: false, message: "Unauthorized" });
+            return res.json({ success: false, message: "Unauthorized" });
         }
 
         booking.status = status;
@@ -139,6 +131,6 @@ export const changeBookingStatus = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ success: false, message: "Failed to update booking status", error: error.message });
+        res.json({ success: false, message: "Failed to update booking status", error: error.message });
     }
 };
