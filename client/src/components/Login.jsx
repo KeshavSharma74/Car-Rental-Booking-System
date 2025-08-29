@@ -141,6 +141,11 @@ const AuthModal = () => {
             : <>Already have an account? <span onClick={() => setMode("login")} className="text-blue-600 cursor-pointer">Login</span></>
           }
         </p>
+{/* 
+      <button type="button" class="w-full flex items-center -mt-6 gap-2 justify-center mb-7 bg-white border border-gray-500/30 py-2.5 rounded-full text-gray-800">
+          <img class="h-4 w-4" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleFavicon.png" alt="googleFavicon" />
+          Log in with Google
+      </button> */}
       </form>
     </div>
   );

@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import Car from "../models/car.model.js";
+import transporter from "../config/nodemailer.js";
+import { REGISTRATION_EMAIL } from "../config/emailTemplate.js";
 
 const generateToken = (userId, res) => {
     const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -60,6 +62,13 @@ const register = async (req, res) => {
         });
 
         generateToken(user._id, res);
+
+        await transporter.sendMail({
+            from:process.env.SENDER_MAIL,
+            to: email,
+            subject: "Welcome to CarRental",
+            html:REGISTRATION_EMAIL
+        })
 
         return res.json({
             success: true,
